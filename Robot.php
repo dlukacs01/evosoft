@@ -3,7 +3,7 @@
 class Robot {
 
     // defining the room = grid = cells = 2-dimensional array = matrix with rows (X) and columns (Y)
-    public $cells = array(
+    private array $cells = array(
         array(-1,-1,-1,-1,-1),
         array(-1,0,0,0,-1),
         array(-1,0,0,1,-1),
@@ -11,26 +11,26 @@ class Robot {
     );
 
     // up, right, down and left - These are PAIRS for moving the robot in the coordinate system
-    public $move_row = array(-1,0,1,0);
-    public $move_col = array(0,1,0,-1);
+    private array $move_row = array(-1,0,1,0);
+    private array $move_col = array(0,1,0,-1);
 
-    public $currentRow;
-    public $currentCol;
-    public $currentDir;
+    private int $current_row;
+    private int $current_col;
+    private int $current_dir;
 
-    public $newRow;
-    public $newCol;
-    public $newDir;
+    private int $new_row;
+    private int $new_col;
+    private int $new_dir;
 
-    public $nincs_tovabb;
+    private bool $no_further = false; // Typed property must not be accessed before initialization
 
-    function __construct($currentRow, $currentCol, $currentDir) {
-        $this->currentRow = $currentRow;
-        $this->currentCol = $currentCol;
-        $this->currentDir = $currentDir;
+    public function __construct(int $current_row, int $current_col, int $current_dir) {
+        $this->current_row = $current_row;
+        $this->current_col = $current_col;
+        $this->current_dir = $current_dir;
     }
 
-    function drawRoom() {
+    public function drawRoom() : void {
         echo "<table class='center'>";
 
         foreach($this->cells as $rows) {
@@ -49,7 +49,7 @@ class Robot {
         echo "<br>";
     }
 
-    function isFree($row, $col) {
+    private function isFree(int $row, int $col) : bool {
         if($this->cells[$row][$col] == 0) {
             return true;
         } else {
@@ -57,71 +57,74 @@ class Robot {
         }
     }
 
-    function checkFinish() {
-        if($this->cells[$this->currentRow][$this->currentCol] == 1 && $this->nincs_tovabb == true) {
+    private function checkFinish() : bool {
+        if($this->cells[$this->current_row][$this->current_col] == 1 && $this->no_further == true) {
             return true;
         } else {
             return false;
         }
     }
 
-    function run() {
+    public function run() : void {
 
         while(!$this->checkFinish()) {
 
-            $this->nincs_tovabb = true;
+            $this->no_further = true;
 
+            // checking all the surrounding cells
             for($i = 0; $i < 4; $i++) {
 
-                $this->newDir = ($this->currentDir + $i) % 4;
+                $this->new_dir = ($this->current_dir + $i) % 4;
 
-                $this->newRow = $this->currentRow + $this->move_row[$this->newDir];
-                $this->newCol = $this->currentCol + $this->move_col[$this->newDir];
+                // setting next / surrounding cells, in every direction
+                $this->new_row = $this->current_row + $this->move_row[$this->new_dir];
+                $this->new_col = $this->current_col + $this->move_col[$this->new_dir];
 
-                // ha valamelyik irányban találok szabad cellát
-                if($this->isFree($this->newRow, $this->newCol)) {
-                    $this->nincs_tovabb = false;
+                // if one of them is free, go ahead
+                if($this->isFree($this->new_row, $this->new_col)) {
+                    $this->no_further = false;
                     break;
                 }
             }
 
-            // [ha vissza kell lépni]
+            // [if we have to go back]
 
-            if($this->nincs_tovabb == true) {
+            if($this->no_further == true) {
 
-                // ha nem a kezdeti cellában vagyunk
-                if($this->cells[$this->currentRow][$this->currentCol] != 1) {
+                // check if we are not on the starter cell
+                if($this->cells[$this->current_row][$this->current_col] != 1) {
 
                     $i = 0;
                     do {
                         // move until you find the previous cell
-                        $this->newRow = $this->currentRow + $this->move_row[$i];
-                        $this->newCol = $this->currentCol + $this->move_col[$i];
+                        $this->new_row = $this->current_row + $this->move_row[$i];
+                        $this->new_col = $this->current_col + $this->move_col[$i];
                         $i++;
-                    } while ($this->cells[$this->newRow][$this->newCol] != $this->cells[$this->currentRow][$this->currentCol] - 1);
+                    } while ($this->cells[$this->new_row][$this->new_col] != $this->cells[$this->current_row][$this->current_col] - 1);
 
-                    $this->currentRow = $this->newRow;
-                    $this->currentCol = $this->newCol;
-                    $this->currentDir = 0;
+                    $this->current_row = $this->new_row;
+                    $this->current_col = $this->new_col;
+                    $this->current_dir = 0;
 
                 }
 
             }
 
-            // [ha nem kell visszalépni]
+            // [if we dont have to go back]
 
             else {
 
                 // clean
-                $this->cells[$this->newRow][$this->newCol] = $this->cells[$this->currentRow][$this->currentCol] + 1;
+                $this->cells[$this->new_row][$this->new_col] = $this->cells[$this->current_row][$this->current_col] + 1;
 
                 // move
-                $this->currentRow = $this->newRow;
-                $this->currentCol = $this->newCol;
+                $this->current_row = $this->new_row;
+                $this->current_col = $this->new_col;
 
                 // update dir
-                $this->currentDir = $this->newDir;
+                $this->current_dir = $this->new_dir;
 
+                // draw current HTML table = state
                 $this->drawRoom();
 
             }
