@@ -10,7 +10,7 @@ class Robot {
         array(-1,-1,-1,-1,-1)
     );
 
-    // up, right, down and left - These are PAIRS for moving the robot in the coordinate system
+    // 0:up, 1:right, 2:down, 3:left - These are PAIRS for moving the robot in the coordinate system
     private array $move_row = array(-1,0,1,0);
     private array $move_col = array(0,1,0,-1);
 
@@ -74,6 +74,7 @@ class Robot {
             // checking all the surrounding cells
             for($i = 0; $i < 4; $i++) {
 
+                // The direction where the robot wants to go / try first is based on the previous direction
                 $this->new_dir = ($this->current_dir + $i) % 4;
 
                 // setting next / surrounding cells, in every direction
@@ -91,7 +92,7 @@ class Robot {
 
             if($this->no_further == true) {
 
-                // check if we are not on the starter cell
+                // If we are on the starter cell, we dont have to go back, since that is our starting point
                 if($this->cells[$this->current_row][$this->current_col] != 1) {
 
                     $i = 0;
