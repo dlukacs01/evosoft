@@ -49,6 +49,7 @@ class Robot {
         echo "<br>";
     }
 
+    // we only clean / (move to) cells that has a value of zero
     private function isFree(int $row, int $col) : bool {
         if($this->cells[$row][$col] == 0) {
             return true;
