@@ -111,6 +111,7 @@ class Robot {
                     $this->current_col = $this->new_col;
                     $this->current_dir = 0;
 
+                    $this->no_further = false; // +1 for loop
                 }
 
             }
