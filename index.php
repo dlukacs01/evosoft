@@ -40,7 +40,7 @@ require_once "Robot.php";
 <?php
 
 // Initialize robot with default row and col coordinates, and set the default direction
-$robot = new Robot(2, 3, 0);
+$robot = new Robot(5, 3, 0);
 
 // Draw the "starter-state-table" (grid)
 $robot->drawRoom();

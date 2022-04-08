@@ -5,7 +5,10 @@ class Robot {
     // defining the room = grid = cells = 2-dimensional array = matrix with rows and columns
     private array $cells = array(
         array(-1,-1,-1,-1,-1),
-        array(-1,0,0,0,-1),
+        array(-1,0,-1,0,-1),
+        array(-1,0,-1,0,-1),
+        array(-1,0,-1,0,-1),
+        array(-1,0,-1,0,-1),
         array(-1,0,0,1,-1),
         array(-1,-1,-1,-1,-1)
     );
