@@ -39,13 +39,13 @@ require_once "Robot.php";
 
 <?php
 
-// Initialize robot with default X and Y coordinates, and set the default direction.
+// Initialize robot with default row and col coordinates, and set the default direction
 $robot = new Robot(2, 3, 0);
 
 // Draw the "starter-state-table" (grid)
 $robot->drawRoom();
 
-// Turn on the robot, and let it clean the entire room.
+// Turn on the robot, and let it clean the entire room
 $robot->run();
 
 ?>
